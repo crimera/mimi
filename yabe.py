@@ -58,6 +58,6 @@ class Yabe():
 
         return out
 
-    def transcribe_and_embed(self, filename: str, lang: str = "ja"):
+    def transcribe_and_embed(self, filename: str, thumbnail: str, lang: str = "ja"):
         self.transcribe(filename, lang)
-        return self.embed(filename)
+        return self.embed(filename, thumbnail)
