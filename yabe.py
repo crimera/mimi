@@ -50,7 +50,7 @@ class Yabe():
         srt = Path(filename).with_suffix(".srt")
         out = Path(filename).with_suffix(".mkv")
 
-        if thumbnail:
+        if thumbnail and Path(thumbnail).exists():
             thumbnail = f'--attach-file "{thumbnail}"'
 
         subprocess.Popen(
