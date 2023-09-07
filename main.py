@@ -6,10 +6,13 @@ import urllib.parse
 from yt_dlp import YoutubeDL
 
 
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--lang", type=str, default="ja", help="source language")
-parser.add_argument("--task", type=str, default="translate", help="task translate | transcribe")
-parser.add_argument("--thumbnail", type=str, default="", help="path to thumbnail")
+parser.add_argument("--task", type=str, default="translate",
+                    help="task translate | transcribe")
+parser.add_argument("--thumbnail", type=str, default="",
+                    help="path to thumbnail")
 parser.add_argument("--model", type=str, help="path or size of model")
 parser.add_argument("input_or_url", type=str, help="the file to transcribe")
 
@@ -35,22 +38,25 @@ if is_supported(inpt):
     ydl_opts = {
         'final_ext': 'opus',
         'format': 'bestaudio/best',
-        'postprocessors':
-            [{
+        'postprocessors': [
+            {
                 'format': 'jpg',
                 'key': 'FFmpegThumbnailsConvertor',
-                'when': 'before_dl'},
-             {
-                 'key': 'FFmpegExtractAudio',
-                 'nopostoverwrites': False,
-                 'preferredcodec': 'best',
-                 'preferredquality': '5'
-              }],
-        'writethumbnail': True}
+                'when': 'before_dl'
+            },
+            {
+                'key': 'FFmpegExtractAudio',
+                'nopostoverwrites': False,
+                'preferredcodec': 'best',
+                'preferredquality': '5'
+            }
+        ],
+        'writethumbnail': True
+    }
 
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(inpt, download=True)
-        file_path = ydl.prepare_filename(info) 
+        file_path = ydl.prepare_filename(info)
 
     filename = Path(file_path).with_suffix(".opus")
     thumbnail = Path(file_path).with_suffix(".jpg")
