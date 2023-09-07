@@ -4,11 +4,10 @@ from faster_whisper import WhisperModel
 from pathlib import Path
 from utils import time
 
+
 class Yabe():
-    def __init__(self, model_size_or_path: str, 
-                 beamsize: int = 5,
-                 vad_filter: bool = True,
-                 task = "translate") -> None:
+    def __init__(self, model_size_or_path: str, beamsize: int = 5,
+                 vad_filter: bool = True, task="translate") -> None:
 
         self.beamsize = beamsize
         self.task = task
@@ -24,15 +23,15 @@ class Yabe():
             return
 
         segments, info = self.model.transcribe(
-            filename, 
-            beam_size=self.beamsize, 
+            filename,
+            beam_size=self.beamsize,
             task=self.task,
             vad_filter=self.vad_filter
         )
 
         if not lang:
             print("Detected language '%s' with probability %f" %
-              (info.language, info.language_probability))
+                  (info.language, info.language_probability))
 
         lines = StringIO()
 
@@ -50,14 +49,18 @@ class Yabe():
     def embed(self, filename: str, thumbnail: str = ""):
         srt = Path(filename).with_suffix(".srt")
         out = Path(filename).with_suffix(".mkv")
-    
+
+        if thumbnail:
+            thumbnail = f'--attach-file "{thumbnail}"'
+
         subprocess.Popen(
-            f'mkvmerge "{filename}" "{srt}" --attach-file "{thumbnail}" -o "{out}"',
+            f'mkvmerge "{filename}" "{srt}" {thumbnail} -o "{out}"',
             shell=True
         )
 
         return out
 
-    def transcribe_and_embed(self, filename: str, thumbnail: str, lang: str = "ja"):
+    def transcribe_and_embed(self, filename: str, thumbnail: str,
+                             lang: str = "ja"):
         self.transcribe(filename, lang)
         return self.embed(filename, thumbnail)
