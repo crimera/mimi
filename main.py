@@ -1,10 +1,9 @@
 from pathlib import Path
-from utils import is_supported, download 
+from utils import download 
 from urllib.parse import urlparse
 from hosts import AsmrOne
 from yabe import Yabe
 import argparse
-import urllib.parse
 from yt_dlp import YoutubeDL
 
 
