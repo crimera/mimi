@@ -16,6 +16,8 @@ parser.add_argument("--thumbnail", type=str, default="",
                     help="path to thumbnail")
 parser.add_argument("--model", type=str, help="path or size of model")
 parser.add_argument("input_or_url", type=str, help="the file to transcribe")
+parser.add_argument("--pools", type=int, default=2,
+                    help="path to thumbnail")
 
 args = parser.parse_args()
 
@@ -24,6 +26,7 @@ lang = args.lang
 task = args.task
 model = args.model
 thumbnail = args.thumbnail
+pools = args.pools
 
 model = Yabe(model, task=task)
 host = urlparse(inpt).netloc
@@ -48,5 +51,5 @@ if host == 'asmr.one':
     
     audios = [x for x in links if x["type"] == "audio"]
     
-    pool = ThreadPool(processes=2)
+    pool = ThreadPool(processes=pools)
     pool.starmap(download_and_transcribe, [(i,) for i in audios])
