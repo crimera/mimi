@@ -1,7 +1,5 @@
 import requests
 import ast
-import yt_dlp
-from pathlib import Path
 from os.path import exists
 from urllib.parse import unquote, urlparse, parse_qs
 from utils import ENDPOINT, HEADERS, WORKINFO_ENDPOINT
