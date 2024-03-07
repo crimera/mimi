@@ -1,3 +1,4 @@
+from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from utils import download 
 from urllib.parse import urlparse
@@ -27,6 +28,14 @@ thumbnail = args.thumbnail
 model = Yabe(model, task=task)
 host = urlparse(inpt).netloc
 
+def download_and_transcribe(i):
+    link = i["mediaDownloadUrl"]
+    name = i["title"]
+    download(link, path)
+    print("Start transcribing...")
+    model.transcribe_and_embed(f"{path}{name}", thumbnail, lang)
+    
+
 if host == 'asmr.one':
     work = AsmrOne(inpt)
     path = f"RJ{work.code}/"
@@ -36,14 +45,8 @@ if host == 'asmr.one':
 
     links = work.get_track_urls()
     thumbnail = download(work.get_thumbnail(), path)
-
-    for i in links:
-        if i["type"] != "audio":
-            continue
-        link = i["mediaDownloadUrl"]
-        name = i["title"]
-        download(link, path)
-        print("Start transcribing...")
-        model.transcribe_and_embed(f"{path}{name}", thumbnail, lang)
-elif not host:
-    model.transcribe_and_embed(inpt, thumbnail, lang)
+    
+    audios = [x for x in links if x["type"] == "audio"]
+    
+    pool = ThreadPool(processes=2)
+    pool.starmap(download_and_transcribe, [(i,) for i in audios])
