@@ -24,9 +24,7 @@ def is_supported(url):
     return False
 
 def get_filename_from_url(_url: str):
-    """
-    Get filename from content-disposition
-    """
+    # Get filename from content-disposition
     r = requests.get(_url, allow_redirects=True)
     cd = r.headers.get('content-disposition')
     if not cd or 'filename=' not in cd:
