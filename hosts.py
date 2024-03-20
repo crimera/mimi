@@ -15,7 +15,7 @@ class AsmrOne():
         try:
             parsed_url = urlparse(url)
             query_dict = parse_qs(parsed_url.query)
-            path_list = ast.literal_eval(query_dict['path'][0])
+            path_list = query_dict['path'][0]
             return path_list
         except (KeyError, ValueError):
             # No path query parameter or not a valid list expression
