@@ -27,29 +27,32 @@ def is_supported(url):
     return False
 
 
-def get_filename_from_url(url: str) -> str:
+def get_filename_from_url(_url: str) -> str:
     # Get filename from content-disposition
-    r = requests.get(url, allow_redirects=True)
+    r = requests.get(_url, allow_redirects=True)
     cd = r.headers.get("content-disposition")
     if not cd or "filename=" not in cd:
-        return unquote(urlparse(url).path.split("/")[-1])
+        return unquote(urlparse(_url).path.split("/")[-1])
     filename = re.findall("filename=(.+)", cd)
     if len(filename) == 0:
-        raise Exception("filename was not found")
+        raise Exception("Filename not found")
     return filename[0]
 
 
 def download(url: str, path: str = "") -> str:
     response = requests.get(url, stream=True, headers=HEADERS)
-
     filename = path + get_filename_from_url(url)
 
     if os.path.exists(filename):
         print("File already exists, cancelling download...")
         return filename
 
+    print(f"Downloading {filename}")
+
     with open(filename, mode="wb") as file:
         for chunk in response.iter_content(chunk_size=10 * 1024):
             file.write(chunk)
+
+    print(f"Downloading {filename}")
 
     return filename
