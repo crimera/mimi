@@ -1,23 +1,19 @@
-from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from utils import download 
+from utils import download
 from urllib.parse import urlparse
 from hosts import AsmrOne
 from yabe import Yabe
 import argparse
 
-
-parser = argparse.ArgumentParser(
-    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--lang", type=str, default="ja", help="source language")
-parser.add_argument("--task", type=str, default="translate",
-                    help="task translate | transcribe")
-parser.add_argument("--thumbnail", type=str, default="",
-                    help="path to thumbnail")
+parser.add_argument(
+    "--task", type=str, default="translate", help="task translate | transcribe"
+)
+parser.add_argument("--thumbnail", type=str, default="", help="path to thumbnail")
 parser.add_argument("--model", type=str, help="path or size of model")
 parser.add_argument("input_or_url", type=str, help="the file to transcribe")
-parser.add_argument("--pools", type=int, default=2,
-                    help="path to thumbnail")
+parser.add_argument("--pools", type=int, default=2, help="path to thumbnail")
 
 args = parser.parse_args()
 
@@ -31,15 +27,16 @@ pools = args.pools
 model = Yabe(model, task=task)
 host = urlparse(inpt).netloc
 
+
 def download_and_transcribe(i):
     link = i["mediaDownloadUrl"]
     name = i["title"]
     download(link, path)
     print("Start transcribing...")
     model.transcribe_and_embed(f"{path}{name}", thumbnail, lang)
-    
 
-if host == 'asmr.one':
+
+if host == "asmr.one":
     work = AsmrOne(inpt)
     path = f"RJ{work.code}/"
 
@@ -48,8 +45,8 @@ if host == 'asmr.one':
 
     links = work.get_track_urls()
     thumbnail = download(work.get_thumbnail(), path)
-    
+
     audios = [x for x in links if x["type"] == "audio"]
-    
-    pool = ThreadPool(processes=pools)
-    pool.starmap(download_and_transcribe, [(i,) for i in audios])
+
+    for i in audios:
+        download_and_transcribe(i)

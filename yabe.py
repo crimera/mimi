@@ -5,10 +5,14 @@ from pathlib import Path
 from utils import time
 
 
-class Yabe():
-    def __init__(self, model_size_or_path: str, beamsize: int = 5,
-                 vad_filter: bool = True, task="translate") -> None:
-
+class Yabe:
+    def __init__(
+        self,
+        model_size_or_path: str,
+        beamsize: int = 5,
+        vad_filter: bool = True,
+        task="translate",
+    ) -> None:
         self.beamsize = beamsize
         self.task = task
         self.vad_filter = vad_filter
@@ -26,12 +30,14 @@ class Yabe():
             filename,
             beam_size=self.beamsize,
             task=self.task,
-            vad_filter=self.vad_filter
+            vad_filter=self.vad_filter,
         )
 
         if not lang:
-            print("Detected language '%s' with probability %f" %
-                  (info.language, info.language_probability))
+            print(
+                "Detected language '%s' with probability %f"
+                % (info.language, info.language_probability)
+            )
 
         lines = StringIO()
 
@@ -54,13 +60,11 @@ class Yabe():
             thumbnail = f'--attach-file "{thumbnail}"'
 
         subprocess.Popen(
-            f'mkvmerge "{filename}" "{srt}" {thumbnail} -o "{out}"',
-            shell=True
+            f'mkvmerge "{filename}" "{srt}" {thumbnail} -o "{out}"', shell=True
         )
 
         return out
 
-    def transcribe_and_embed(self, filename: str, thumbnail: str,
-                             lang: str = "ja"):
+    def transcribe_and_embed(self, filename: str, thumbnail: str, lang: str = "ja"):
         self.transcribe(filename, lang)
         return self.embed(filename, thumbnail)
