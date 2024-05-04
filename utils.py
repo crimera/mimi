@@ -5,6 +5,8 @@ import requests
 import yt_dlp
 import os.path
 
+from yt_dlp.cookies import subprocess
+
 
 ENDPOINT = "https://api.asmr-100.com/api/tracks/"
 WORKINFO_ENDPOINT = "https://api.asmr-100.com/api/work/"
@@ -39,6 +41,12 @@ def get_filename_from_url(_url: str) -> str:
     return filename[0]
 
 
+def convert_to_opus(filename: str) -> str:
+    out = filename.removesuffix(f"{filename.split(".")[-1]}") + "opus"
+    subprocess.Popen(f'ffmpeg -i "{filename}" -o "{out}"', shell=True)
+    return out
+
+
 def download(url: str, path: str = "") -> str:
     response = requests.get(url, stream=True, headers=HEADERS)
     filename = path + get_filename_from_url(url)
@@ -52,7 +60,5 @@ def download(url: str, path: str = "") -> str:
     with open(filename, mode="wb") as file:
         for chunk in response.iter_content(chunk_size=10 * 1024):
             file.write(chunk)
-
-    print(f"Downloading {filename}")
 
     return filename

@@ -2,7 +2,9 @@ from io import StringIO
 import subprocess
 from faster_whisper import WhisperModel
 from pathlib import Path
-from utils import time
+
+from utils import time, convert_to_opus
+from main import to_opus
 
 
 class Yabe:
@@ -58,6 +60,10 @@ class Yabe:
 
         if thumbnail and Path(thumbnail).exists():
             thumbnail = f'--attach-file "{thumbnail}"'
+
+        if filename.endswith("wav") and to_opus:
+            print(f"Converting {filename} to opus")
+            filename = convert_to_opus(filename)
 
         subprocess.Popen(
             f'mkvmerge "{filename}" "{srt}" {thumbnail} -o "{out}"', shell=True
