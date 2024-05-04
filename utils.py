@@ -42,7 +42,7 @@ def get_filename_from_url(_url: str) -> str:
 
 
 def convert_to_opus(filename: str) -> str:
-    out = filename.removesuffix(f"{filename.split(".")[-1]}") + "opus"
+    out = filename.removesuffix(f'{filename.split(".")[-1]}') + "opus"
     subprocess.Popen(f'ffmpeg -i "{filename}" -o "{out}"', shell=True)
     return out
 
