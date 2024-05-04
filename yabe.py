@@ -4,7 +4,6 @@ from faster_whisper import WhisperModel
 from pathlib import Path
 
 from utils import time, convert_to_opus
-from main import to_opus
 
 
 class Yabe:
@@ -54,7 +53,7 @@ class Yabe:
 
         srt.write_text(lines.getvalue())
 
-    def embed(self, filename: str, thumbnail: str = ""):
+    def embed(self, filename: str, thumbnail: str = "", to_opus: bool = False):
         srt = Path(filename).with_suffix(".srt")
         out = Path(filename).with_suffix(".mkv")
 
@@ -71,6 +70,8 @@ class Yabe:
 
         return out
 
-    def transcribe_and_embed(self, filename: str, thumbnail: str, lang: str = "ja"):
+    def transcribe_and_embed(
+        self, filename: str, thumbnail: str, lang: str = "ja", to_opus: bool = False
+    ):
         self.transcribe(filename, lang)
-        return self.embed(filename, thumbnail)
+        return self.embed(filename, thumbnail, to_opus)

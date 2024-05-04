@@ -37,7 +37,7 @@ def download_and_transcribe(i):
     name = i["title"]
     download(link, path)
     print("Start transcribing...")
-    model.transcribe_and_embed(f"{path}{name}", thumbnail, lang)
+    model.transcribe_and_embed(f"{path}{name}", thumbnail, lang, to_opus)
 
 
 if host == "asmr.one":
