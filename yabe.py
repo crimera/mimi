@@ -13,7 +13,7 @@ class Yabe:
         beamsize: int = 5,
         vad_filter: bool = True,
         task="translate",
-        temperature: int = 0.5
+        temperature: float = 0.5
     ) -> None:
         self.beamsize = beamsize
         self.task = task
