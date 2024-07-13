@@ -13,10 +13,12 @@ class Yabe:
         beamsize: int = 5,
         vad_filter: bool = True,
         task="translate",
+        temperature: int = 0.5
     ) -> None:
         self.beamsize = beamsize
         self.task = task
         self.vad_filter = vad_filter
+        self.temerature = temperature
 
         self.model = WhisperModel(model_size_or_path, num_workers=2)
 
@@ -32,6 +34,7 @@ class Yabe:
             beam_size=self.beamsize,
             task=self.task,
             vad_filter=self.vad_filter,
+            temperature=self.temerature
         )
 
         if not lang:
