@@ -1,0 +1,23 @@
+<html lang="en">
+
+<head>
+	<script src="static/htmx.min.js"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>faster whisper</title>
+</head>
+
+<body>
+	<form id="input-form" style="display: flex; flex-direction: column; gap: 10px;" hx-target="#loading"
+		hx-post="/submit-input">
+		<input type="url" name="url" id="url-input" placeholder="youtube, asmrone or video link">
+		<input type="submit">
+	</form>
+
+	<div id="loading">
+	</div>
+
+	<script src="static/index.js"></script>
+</body>
+
+</html>

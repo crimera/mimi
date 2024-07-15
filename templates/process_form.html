@@ -1,0 +1,34 @@
+<form hx-post="process" style="display: flex; flex-direction: column; gap: 10px;">
+	<input type="hidden" name="url" value="{{url}}">
+
+	<div>
+		<label for="select-model" style="margin-right: 10px;">Model:</label>
+		<select name="model" id="select-model">
+			<option value="large-v3">Large V3</option>
+			<option value="tiny.en">Tiny English</option>
+		</select>
+	</div>
+
+	<div>
+		<label for="select-lang" style="margin-right: 10px;">Media Language:</label>
+		<select name="lang" id="select-lang">
+			<option value="ja">Japanese</option>
+			<option value="en">English</option>
+		</select>
+	</div>
+
+	<div>
+		<label for="select-task" style="margin-right: 10px;">Task:</label>
+		<select name="task" id="select-task">
+			<option value="translate">Translate</option>
+			<option value="transcribe">Transcribe</option>
+		</select>
+	</div>
+
+	<div>
+		<label for="checkbox-opus" style="margin-right: 10px;">Convert to Opus:</label>
+		<input type="checkbox" name="to_opus" id="checkbox-opus">
+	</div>
+
+	<input type="submit" value="Generate">
+</form>
