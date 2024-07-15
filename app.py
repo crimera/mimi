@@ -63,3 +63,7 @@ def asmrone():
         download_and_transcribe(model, path, thumbnail, lang, to_opus, task, i)
 
     return "SUCCESS"
+
+
+if __name__ == "__main__":
+    app.run()

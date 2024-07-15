@@ -1,2 +1,6 @@
 flask
 yt-dlp
+faster-whisper
+pycurl 
+openai-whisper
+ffmpeg-python
