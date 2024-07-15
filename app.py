@@ -55,7 +55,7 @@ def asmrone():
     links = work.get_track_urls()
     thumbnail = download(work.get_thumbnail(), path)
 
-    audios = [x for x in links if x["type"] == "audir"]
+    audios = [x for x in links if x["type"] == "audio"]
 
     model = Yabe(model, task=task, temperature=0.5)
 
