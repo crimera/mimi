@@ -64,6 +64,8 @@ class JapaneseAsmr:
     def _get_page(self):
         if self._page is None:
             resp = requests.get(self.url, headers=HEADERS)
+            if resp.status_code != 200:
+                raise Exception(f"Failed to get page[{self.url}] {resp.status_code}")
             self._page = BeautifulSoup(resp.text, "html.parser")
         return self._page
 
