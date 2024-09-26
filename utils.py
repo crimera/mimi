@@ -10,6 +10,7 @@ from yt_dlp.cookies import subprocess
 
 ENDPOINT = "https://api.asmr-100.com/api/tracks/"
 WORKINFO_ENDPOINT = "https://api.asmr-100.com/api/work/"
+JAPANESEASMR_HOST = "https://japaneseasmr.com/"
 USERAGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.58"
 HEADERS = {"User-Agent": USERAGENT}
 
@@ -47,8 +48,12 @@ def convert_to_opus(filename: str) -> str:
     return out
 
 
-def download(url: str, path: str = "") -> str:
-    response = requests.get(url, stream=True, headers=HEADERS)
+def download(url: str, path: str = "", referer=None) -> str:
+    headers = HEADERS.copy()
+    if referer:
+        headers["Referer"] = referer
+
+    response = requests.get(url, stream=True, headers=headers)
     filename = path + get_filename_from_url(url)
 
     if os.path.exists(filename):

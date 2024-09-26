@@ -1,7 +1,9 @@
 import ast
+import bs4
 import requests
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, quote
 from utils import ENDPOINT, HEADERS, WORKINFO_ENDPOINT
+from bs4 import BeautifulSoup, Tag
 
 
 class AsmrOne:
@@ -49,3 +51,69 @@ class AsmrOne:
                     data = item["children"]
 
         return data
+
+
+class JapaneseAsmr:
+    def __init__(self, url):
+        self.url = url
+        self._thumburl = None
+        self._tracks = None
+        self._code = None
+        self._page = None
+
+    def _get_page(self):
+        if self._page is None:
+            resp = requests.get(self.url)
+            self._page = BeautifulSoup(resp.text, "html.parser")
+        return self._page
+
+    @property
+    def thumburl(self):
+        return f"https://pic.weeabo0.xyz/{self.code}_img_main.jpg"
+
+    @property
+    def code(self):
+        if self._code is None:
+            content = self._get_page().select_one(".entry-content")
+            if content is not None:
+                for i in content.find_all("p"):
+                    if type(i) is bs4.element.Tag and "RJ Code:" in i.text:
+                        self._code = i.text.removeprefix("RJ Code:").strip()
+
+        return self._code
+
+    @property
+    def tracks(self):
+        if self._tracks is None:
+            tracks = []
+            audiosContainer = self._get_page().select_one("div.audio_main")
+            if audiosContainer is None:
+                raise Exception("could not find audio div")
+
+            for i in audiosContainer:
+                if type(i) is not Tag:
+                    continue
+
+                if i.name == "p" and i.text:
+                    title = i.text
+                    audio = i.nextSibling
+                    if type(audio) is not Tag:
+                        raise Exception("failed to get audio: Audio is not of type Tag")
+                    if audio.name != "audio":
+                        raise Exception(f"failed to get audio for {title}")
+
+                    source = audio.find("source")
+                    if type(source) is not Tag:
+                        raise Exception(
+                            f"failed to get source for {title}: source is not of type Tag"
+                        )
+
+                    link = quote(source.attrs["src"].removeprefix("https://"))
+
+                    tracks.append(
+                        {"title": title, "mediaDownloadUrl": "https://" + link}
+                    )
+
+                self._tracks = tracks
+
+        return self._tracks
