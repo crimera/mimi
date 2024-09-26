@@ -13,7 +13,7 @@ class Yabe:
         beamsize: int = 5,
         vad_filter: bool = True,
         task="translate",
-        temperature: float = 0.5
+        temperature: float = 0.5,
     ) -> None:
         self.beamsize = beamsize
         self.task = task
@@ -34,7 +34,7 @@ class Yabe:
             beam_size=self.beamsize,
             task=self.task,
             vad_filter=self.vad_filter,
-            temperature=self.temerature
+            temperature=self.temerature,
         )
 
         if not lang:
@@ -68,7 +68,7 @@ class Yabe:
             filename = convert_to_opus(filename)
 
         subprocess.Popen(
-            f'mkvmerge "{filename}" "{srt}" {thumbnail} -o "{out}"', shell=True
+            f'mkvmerge "{filename}" "{srt}" "{thumbnail}" -o "{out}"', shell=True
         )
 
         return out
