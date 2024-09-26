@@ -68,7 +68,7 @@ class Yabe:
             filename = convert_to_opus(filename)
 
         subprocess.Popen(
-            f'mkvmerge "{filename}" "{srt}" "{thumbnail}" -o "{out}"', shell=True
+            f'mkvmerge "{filename}" "{srt}" {thumbnail} -o "{out}"', shell=True
         )
 
         return out
