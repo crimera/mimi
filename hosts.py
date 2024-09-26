@@ -63,7 +63,7 @@ class JapaneseAsmr:
 
     def _get_page(self):
         if self._page is None:
-            resp = requests.get(self.url)
+            resp = requests.get(self.url, headers=HEADERS)
             self._page = BeautifulSoup(resp.text, "html.parser")
         return self._page
 
@@ -74,8 +74,9 @@ class JapaneseAsmr:
     @property
     def code(self):
         if self._code is None:
-            content = self._get_page().select_one(".entry-content")
-            if content is not None:
+            content = self._get_page().find("div", attrs={"class": "entry-content"})
+
+            if content is not None and type(content) is Tag:
                 for i in content.find_all("p"):
                     if type(i) is bs4.element.Tag and "RJ Code:" in i.text:
                         self._code = i.text.removeprefix("RJ Code:").strip()
