@@ -73,4 +73,6 @@ match host:
             raise Exception("No audios found")
 
         for i in audios:
-            download_and_transcribe(i, thumbnail, JAPANESEASMR_HOST)
+            name = download(i["mediaDownloadUrl"], path, JAPANESEASMR_HOST)
+            print("Start transcribing...")
+            model.transcribe_and_embed(f"{name}", thumbnail, lang, to_opus)
