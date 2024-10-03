@@ -74,3 +74,7 @@ match host:
             name = download(i["mediaDownloadUrl"], path, JAPANESEASMR_HOST)
             print("Start transcribing...")
             model.transcribe_and_embed(f"{name}", thumbnail, lang, to_opus)
+    case _:
+        filename = download(inpt)
+
+        model.transcribe_and_embed(filename)
