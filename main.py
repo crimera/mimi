@@ -14,12 +14,9 @@ parser.add_argument("--thumbnail", type=str, default="", help="path to thumbnail
 parser.add_argument("--model", type=str, help="path or size of model")
 parser.add_argument("input_or_url", type=str, help="the file to transcribe")
 parser.add_argument("--pools", type=int, default=2, help="path to thumbnail")
-parser.add_argument(
-    "--temperature", type=float, default=0.5, help="convert wav file to opus"
-)
-parser.add_argument(
-    "--wav_to_opus", type=int, default=True, help="convert wav file to opus"
-)
+parser.add_argument("--temperature", type=float, default=0, help="convert wav file to opus")
+parser.add_argument("--beam_size", type=int, default=5)
+parser.add_argument("--wav_to_opus", type=int, default=True, help="convert wav file to opus")
 
 args = parser.parse_args()
 
@@ -31,6 +28,7 @@ thumbnail = args.thumbnail
 pools = args.pools
 to_opus = args.wav_to_opus
 temperature = args.temperature
+beam_size = args.beam_size
 
 model = Yabe(model, task=task, temperature=temperature)
 host = urlparse(inpt).netloc

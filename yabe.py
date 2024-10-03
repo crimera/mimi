@@ -10,12 +10,12 @@ class Yabe:
     def __init__(
         self,
         model_size_or_path: str,
-        beamsize: int = 5,
+        beam_size: int = 5,
         vad_filter: bool = True,
         task="translate",
         temperature: float = 0.5,
     ) -> None:
-        self.beamsize = beamsize
+        self.beam_size = beam_size
         self.task = task
         self.vad_filter = vad_filter
         self.temerature = temperature
@@ -31,7 +31,7 @@ class Yabe:
 
         segments, info = self.model.transcribe(
             filename,
-            beam_size=self.beamsize,
+            beam_size=self.beam_size,
             task=self.task,
             vad_filter=self.vad_filter,
             temperature=self.temerature,
@@ -74,7 +74,7 @@ class Yabe:
         return out
 
     def transcribe_and_embed(
-        self, filename: str, thumbnail: str, lang: str = "ja", to_opus: bool = False
+        self, filename: str, thumbnail: str = "", lang: str = "ja", to_opus: bool = False
     ):
         self.transcribe(filename, lang)
         return self.embed(filename, thumbnail, to_opus)
