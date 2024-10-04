@@ -61,7 +61,7 @@ match host:
             clean_audio_work = AsmrOne(clean_audio)
 
             clean_audio_path = path+"clean/"
-            if not Path(path).exists():
+            if not Path(clean_audio_path).exists():
                 Path(clean_audio_path).mkdir(parents=True, exist_ok=True)
 
             clean_audio_links = clean_audio_work.get_track_urls()
@@ -78,7 +78,7 @@ match host:
                 link = i["mediaDownloadUrl"]
                 name = i["title"]
                 download(link, path)
-                model.embed(f"{path}{name}", Path(f"{clean_audio_path}{name}").with_suffix("srt"))
+                model.embed(f"{path}{name}", Path(f"{clean_audio_path}{name}").with_suffix(".srt"))
         else:
             for i in audios:
                 download_and_transcribe(i, thumbnail)
