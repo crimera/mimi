@@ -17,6 +17,7 @@ parser.add_argument("--pools", type=int, default=2, help="path to thumbnail")
 parser.add_argument("--temperature", type=float, default=0, help="convert wav file to opus")
 parser.add_argument("--beam_size", type=int, default=5)
 parser.add_argument("--wav_to_opus", type=int, default=True, help="convert wav file to opus")
+parser.add_argument("--clean_audio", type=str, default="", help="Add a clean audio for transcript, the input audio will still be used for embed")
 
 args = parser.parse_args()
 
@@ -29,6 +30,7 @@ pools = args.pools
 to_opus = args.wav_to_opus
 temperature = args.temperature
 beam_size = args.beam_size
+clean_audio = args.clean_audio
 
 model = Yabe(model, task=task, temperature=temperature)
 host = urlparse(inpt).netloc
@@ -55,8 +57,31 @@ match host:
 
         audios = [x for x in links if x["type"] == "audio"]
 
-        for i in audios:
-            download_and_transcribe(i, thumbnail)
+        if clean_audio:
+            clean_audio_work = AsmrOne(clean_audio)
+
+            clean_audio_path = path+"clean/"
+            if not Path(path).exists():
+                Path(clean_audio_path).mkdir(parents=True, exist_ok=True)
+
+            clean_audio_links = clean_audio_work.get_track_urls()
+            clean_audios = [x for x in links if x["type"]=="audio"]
+
+            for i in clean_audios:
+                link = i["mediaDownloadUrl"]
+                name = i["title"]
+
+                download(link, clean_audio_path)
+                model.transcribe(f"{clean_audio_path}{name}", lang)
+
+            for i in audios:
+                link = i["mediaDownloadUrl"]
+                name = i["title"]
+                download(link, path)
+                model.embed(f"{path}{name}", Path(f"{clean_audio_path}{name}").with_suffix("srt"))
+        else:
+            for i in audios:
+                download_and_transcribe(i, thumbnail)
     case "japaneseasmr.com":
         work = JapaneseAsmr(inpt)
         path = f"{work.code}/"
