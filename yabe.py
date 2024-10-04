@@ -1,6 +1,7 @@
 from io import StringIO
 import subprocess
 from faster_whisper import WhisperModel
+import stable_whisper
 from pathlib import Path
 
 from utils import time, convert_to_opus
@@ -78,3 +79,22 @@ class Yabe:
         self.transcribe(filename, lang)
         srt = Path(filename).with_suffix(".srt")
         return self.embed(filename, srt, thumbnail, to_opus)
+
+class StableWhisper(Yabe):
+    def __init__(self, model_size_or_path: str, beam_size: int = 5, vad_filter: bool = True, task="translate", temperature: float = 0.5) -> None:
+        self.beam_size = beam_size
+        self.task = task
+        self.vad_filter = vad_filter
+        self.temerature = temperature
+
+        self.model = stable_whisper.load_faster_whisper(model_size_or_path)
+
+    def transcribe(self, filename: str, lang: str = "ja"):
+        srt = Path(filename).with_suffix(".srt")
+
+        if srt.exists():
+            print(f"{srt} exists\nskipping transcribe")
+            return
+
+        result = self.model.transcribe_stable(audio=filename, language=lang, vad_filter=self.vad_filter, word_timestamps=False)
+        result.to_srt_vtt(str(srt))

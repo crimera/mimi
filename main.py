@@ -2,7 +2,7 @@ from pathlib import Path
 from utils import JAPANESEASMR_HOST, download
 from urllib.parse import urlparse
 from hosts import AsmrOne, JapaneseAsmr
-from yabe import Yabe
+from yabe import StableWhisper, Yabe
 import argparse
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -13,7 +13,6 @@ parser.add_argument(
 parser.add_argument("--thumbnail", type=str, default="", help="path to thumbnail")
 parser.add_argument("--model", type=str, help="path or size of model")
 parser.add_argument("input_or_url", type=str, help="the file to transcribe")
-parser.add_argument("--pools", type=int, default=2, help="path to thumbnail")
 parser.add_argument("--temperature", type=float, default=0, help="convert wav file to opus")
 parser.add_argument("--beam_size", type=int, default=5)
 parser.add_argument("--wav_to_opus", type=int, default=True, help="convert wav file to opus")
@@ -26,13 +25,12 @@ lang = args.lang
 task = args.task
 model = args.model
 thumbnail = args.thumbnail
-pools = args.pools
 to_opus = args.wav_to_opus
 temperature = args.temperature
 beam_size = args.beam_size
 clean_audio = args.clean_audio
 
-model = Yabe(model, task=task, temperature=temperature)
+model = StableWhisper(model, task=task, temperature=temperature)
 host = urlparse(inpt).netloc
 
 
@@ -44,8 +42,7 @@ def download_and_transcribe(i, thumbnail, referer=None):
     model.transcribe_and_embed(f"{path}{name}", thumbnail, lang, to_opus)
 
 
-match host:
-    case "asmr.one":
+if host == "asmr.one":
         work = AsmrOne(inpt)
         path = f"RJ{work.code}/"
 
@@ -82,7 +79,7 @@ match host:
         else:
             for i in audios:
                 download_and_transcribe(i, thumbnail)
-    case "japaneseasmr.com":
+elif host == "japaneseasmr.com":
         work = JapaneseAsmr(inpt)
         path = f"{work.code}/"
 
@@ -99,7 +96,7 @@ match host:
             name = download(i["mediaDownloadUrl"], path, JAPANESEASMR_HOST)
             print("Start transcribing...")
             model.transcribe_and_embed(f"{name}", thumbnail, lang, to_opus)
-    case _:
+else :
         filename = download(inpt)
 
         model.transcribe_and_embed(filename)
