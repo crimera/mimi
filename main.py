@@ -15,8 +15,9 @@ parser.add_argument("--model", type=str, help="path or size of model")
 parser.add_argument("input_or_url", type=str, help="the file to transcribe")
 parser.add_argument("--temperature", type=float, default=0, help="convert wav file to opus")
 parser.add_argument("--beam_size", type=int, default=5)
-parser.add_argument("--wav_to_opus", type=int, default=True, help="convert wav file to opus")
+parser.add_argument("--wav_to_opus", type=bool, default=False, help="convert wav file to opus")
 parser.add_argument("--clean_audio", type=str, default="", help="Add a clean audio for transcript, the input audio will still be used for embed")
+parser.add_argument("--faster_whisper", type=bool, default=False, help="Use faster-whisper as transcription backend")
 
 args = parser.parse_args()
 
@@ -30,7 +31,10 @@ temperature = args.temperature
 beam_size = args.beam_size
 clean_audio = args.clean_audio
 
-model = StableWhisper(model, task=task, temperature=temperature)
+if args.faster_whisper:
+    model = Yabe(model, task=task, temperature=temperature)
+else:
+    model = StableWhisper(model, task=task, temperature=temperature)
 
 try:
     host = urlparse(inpt).netloc
