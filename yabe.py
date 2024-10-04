@@ -56,8 +56,7 @@ class Yabe:
 
         srt.write_text(lines.getvalue())
 
-    def embed(self, filename: str, thumbnail: str = "", to_opus: bool = False):
-        srt = Path(filename).with_suffix(".srt")
+    def embed(self, filename: str, srt: Path, thumbnail: str = "", to_opus: bool = False):
         out = Path(filename).with_suffix(".mkv")
 
         if thumbnail and Path(thumbnail).exists():
@@ -77,4 +76,5 @@ class Yabe:
         self, filename: str, thumbnail: str = "", lang: str = "ja", to_opus: bool = False
     ):
         self.transcribe(filename, lang)
-        return self.embed(filename, thumbnail, to_opus)
+        srt = Path(filename).with_suffix(".srt")
+        return self.embed(filename, srt, thumbnail, to_opus)
