@@ -31,7 +31,11 @@ beam_size = args.beam_size
 clean_audio = args.clean_audio
 
 model = StableWhisper(model, task=task, temperature=temperature)
-host = urlparse(inpt).netloc
+
+try:
+    host = urlparse(inpt).netloc
+except Exception:
+    host = ""
 
 
 def download_and_transcribe(i, thumbnail, referer=None):
@@ -96,6 +100,8 @@ elif host == "japaneseasmr.com":
             name = download(i["mediaDownloadUrl"], path, JAPANESEASMR_HOST)
             print("Start transcribing...")
             model.transcribe_and_embed(f"{name}", thumbnail, lang, to_opus)
+elif host == "":
+    model.transcribe_and_embed(inpt)
 else :
         filename = download(inpt)
 
