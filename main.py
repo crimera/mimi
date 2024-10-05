@@ -105,8 +105,8 @@ elif host == "japaneseasmr.com":
             print("Start transcribing...")
             model.transcribe_and_embed(f"{name}", thumbnail, lang, to_opus)
 elif host == "":
-    model.transcribe_and_embed(inpt)
+    model.transcribe_and_embed(inpt, thumbnail, lang, to_opus)
 else :
         filename = download(inpt)
 
-        model.transcribe_and_embed(filename)
+        model.transcribe_and_embed(filename, thumbnail, lang, to_opus)

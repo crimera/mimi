@@ -1,4 +1,5 @@
 from datetime import timedelta
+from pathlib import Path
 import re
 from urllib.parse import urlparse, unquote
 import requests
@@ -41,11 +42,15 @@ def get_filename_from_url(_url: str) -> str:
         raise Exception("Filename not found")
     return filename[0]
 
-
 def convert_to_opus(filename: str) -> str:
-    out = filename.removesuffix(f'{filename.split(".")[-1]}') + "opus"
-    subprocess.Popen(f'ffmpeg -i "{filename}" -o "{out}"', shell=True)
-    return out
+    out = Path(filename).with_suffix(".opus")
+
+    if os.path.exists(str(out)):
+        print("Opus file already exists, skipping...")
+        return str(out)
+
+    subprocess.run(f'ffmpeg -i "{filename}" -c:a libopus -b:a 128k "{out}"', shell=True, check=True)
+    return str(out)
 
 
 def download(url: str, path: str = "", referer=None) -> str:
