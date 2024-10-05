@@ -79,11 +79,12 @@ if host == "asmr.one":
                 download(link, clean_audio_path)
                 model.transcribe(f"{clean_audio_path}{name}", lang)
 
-            for i in audios:
-                link = i["mediaDownloadUrl"]
-                name = i["title"]
+            for i in range(0, len(audios)):
+                link = audios[i]["mediaDownloadUrl"]
+                name = audios[i]["title"]
+                clean_audio_name = clean_audios[i]["title"]
                 download(link, path)
-                model.embed(f"{path}{name}", Path(f"{clean_audio_path}{name}").with_suffix(".srt"))
+                model.embed(f"{path}{name}", Path(f"{clean_audio_path}{clean_audio_name}").with_suffix(".srt"))
         else:
             for i in audios:
                 download_and_transcribe(i, thumbnail)
