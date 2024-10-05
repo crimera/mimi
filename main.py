@@ -70,7 +70,7 @@ if host == "asmr.one":
                 Path(clean_audio_path).mkdir(parents=True, exist_ok=True)
 
             clean_audio_links = clean_audio_work.get_track_urls()
-            clean_audios = [x for x in links if x["type"]=="audio"]
+            clean_audios = [x for x in clean_audio_links if x["type"]=="audio"]
 
             for i in clean_audios:
                 link = i["mediaDownloadUrl"]
