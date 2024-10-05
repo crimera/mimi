@@ -96,5 +96,5 @@ class StableWhisper(Yabe):
             print(f"{srt} exists\nskipping transcribe")
             return
 
-        result = self.model.transcribe_stable(audio=filename, language=lang, vad_filter=self.vad_filter, word_timestamps=False, task=self.task, word_level=False)
+        result = self.model.transcribe_stable(audio=filename, language=lang, vad_filter=self.vad_filter, word_timestamps=False, task=self.task)
         result.to_srt_vtt(str(srt))
